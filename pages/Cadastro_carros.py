@@ -37,14 +37,21 @@ st.markdown('### Cadastro de carros ###')
 
 col01, col02  = st.columns(2)
 with col01:
-    modelo_carro = st.text_input('Informe o nome/modelo do Carro', placeholder='Ford KA')
+    marca_carro = st.text_input('Informe a Marca do Carro', placeholder='Ford')
+    modelo_carro = st.text_input('Informe o modelo do Carro', placeholder='KA 1.0')
     ano_carro = st.number_input('Ano do Carro', placeholder='2025', min_value=1900)
 
-with col02:    
+with col02:
+    km_atual = st.number_input('Quilometragem atual ', placeholder='10999')    
+    km_litro = st.number_input('Quilometros por litro (Km/L)', placeholder='9,8')
     placa = st.text_input('Placa do carro', placeholder='ABC 1234')
-    km_listro = st.number_input('Quilometros por litro (Km/L)', placeholder='9,8')
-    
 
+
+if st.button("Salvar Valores", key='bt_add_carr'):
+    # Aqui você pode adicionar a lógica para adicionar a despesa ao banco de dados
+    st.success("Despesa adicionada com sucesso!")
+
+st.divider()
 #--------------------------------------------------------------
 col03, col04 = st.columns(2, border=True)
 with col03:
@@ -54,10 +61,6 @@ with col03:
 
 with col04:
     st.markdown('Litros no tanque')
-
-if st.button("Salvar Valores", key='bt_add_carr'):
-    # Aqui você pode adicionar a lógica para adicionar a despesa ao banco de dados
-    st.success("Despesa adicionada com sucesso!")
 
 st.divider()
 st.dataframe()
