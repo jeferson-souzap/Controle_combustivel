@@ -1,7 +1,7 @@
 import sqlite3
 from datetime import datetime
 
-LOCAL_DB = r'Controle_combustivel\dados\consumo.db'
+LOCAL_DB = r'D:\#Mega\Jeferson - Dev\02 - Linguagens\Python\Controle_combustivel\dados\consumo.db'
 
 
 def criar_banco_dados():
