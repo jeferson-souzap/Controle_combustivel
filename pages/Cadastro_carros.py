@@ -38,26 +38,12 @@ st.dataframe(lista_combustivel)
 st.divider()
 #--------------------------------------------------------------
 
-'''
-data_cadastro TEXT NOT NULL,
-marca TEXT NOT NULL,
-modelo TEXT NOT NULL,
-nome_completo TEXT NOT NULL,
-ano INTEGER DEFAULT 2000,
-placa TEXT UNIQUE NOT NULL,
-total_tanque REAL DEFAULT 0,
-consumo_litros REAL DEFAULT 0,
-autonomia REAL DEFAULT 0,                     -- km/litro
-tipo_combustivel TEXT NOT NULL,               -- gasolina, diesel, etanol, etc        
-observacoes TEXT
-
-'''
 
 
 
 st.markdown('### Cadastro de carros ###')
 
-data_atual = st.date_input('Informe a data', value='today', format='DD/MM/YYYY')
+data_cadastro = st.date_input('Informe a data', value='today', format='DD/MM/YYYY')
 
 marca = st.text_input('Marca do Carro', placeholder='Ford')
 modelo = st.text_input('Modelo do Carro', placeholder='KA')
@@ -81,48 +67,44 @@ else:
 
 st.markdown(f'Autonomia total (km) = {autonomia}')
 
-obervacao = st.text_input('', placeholder='Campo de observação', max_chars=100)
-
-
+observacoes = st.text_input('', placeholder='Campo de observação', max_chars=100)
 
 
 
 #--------------------------------------------------------------
 # BOTÕES DE CONTROLE
-col_bt01, col_bt02, col_bt03 = st.columns(3)
 
-with col_bt01:
-    if st.button("Salvar Valores", key='bt_add_carr'):
-        resultado, mensagem = Adicionar_carro(marca, modelo, ano, placa, obervacao)
+if st.button("Salvar Valores", key='bt_add_carr'):
+        Adicionar_carro(data_cadastro, marca, modelo, nome_completo, ano, placa, total_tanque, consumo_litros, autonomia, tipo_combustivel, observacoes)
+        st.success('Salvo com sucesso!')
 
-        if resultado:
-            st.success(mensagem)
-        else:
-            st.warning(f'Erro - {mensagem}')
-            st.rerun()
 
-with col_bt02:
-    if st.button("Salvar Valores", key='bt_edit_carr'):
-            resultado, mensagem = Adicionar_carro(marca, modelo, ano, placa, obervacao)
+with st.expander('Edição de cadastro', expanded=False):
+    col_bt01, col_bt02 = st.columns(2)
 
-            if resultado:
-                st.success(mensagem)
-            else:
-                st.warning(f'Erro - {mensagem}')
-                st.rerun()
+    select_carros = pd.DataFrame(Obter_select_box_carros(), columns=['id', 'nome_completo'])
+    nome_carro_edit = st.selectbox('', options=select_carros['nome_completo'])
+    
+    id_selecionado = select_carros.loc[select_carros['nome_completo'] == nome_carro_edit, 'id'].values[0]
 
-with col_bt03:
-    if st.button("Salvar Valores", key='bt_delet_carr'):
-            resultado, mensagem = Adicionar_carro(marca, modelo, ano, placa, obervacao)
+    st.write(id_selecionado)
 
-            if resultado:
-                st.success(mensagem)
-            else:
-                st.warning(f'Erro - {mensagem}')
-                st.rerun()
+
+    with col_bt01:
+        if st.button("Atualiza Valores", key='bt_edit_carr'):
+                pass
+
+
+    with col_bt02:
+        if st.button("Deleta Valores", key='bt_delet_carr'):
+                pass
 
 
 #--------------------------------------------------------------
 st.divider()
+
+lista_carros = pd.DataFrame(Obter_lista_carros())
+st.dataframe(lista_carros)
+
 #--------------------------------------------------------------
 
