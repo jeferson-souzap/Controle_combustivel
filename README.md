@@ -3,7 +3,6 @@
 ### Resumo
 
 O aplicativo nasceu com a necessidade de poder controlar o consumo de combustivel baseado nas configurações do carro.
-
 Vale lembrar que é um calculo aproximado, que pode ajudar muito na programação de viagens longas.
 
 ## Descrição

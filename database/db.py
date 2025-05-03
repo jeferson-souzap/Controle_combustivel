@@ -13,29 +13,30 @@ def criar_banco_dados():
     cursor.execute('''
     CREATE TABLE IF NOT EXISTS carros (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
+        data_cadastro TEXT NOT NULL,
         marca TEXT NOT NULL,
         modelo TEXT NOT NULL,
-        ano INTEGER,
+        nome_completo TEXT NOT NULL,
+        ano INTEGER DEFAULT 2000,
         placa TEXT UNIQUE NOT NULL,
-        quilometragem_atual REAL DEFAULT 0,
-        data_cadastro TEXT NOT NULL,
+        total_tanque REAL DEFAULT 0,
+        consumo_litros REAL DEFAULT 0,
+        autonomia REAL DEFAULT 0,                     -- km/litro
+        tipo_combustivel TEXT NOT NULL,               -- gasolina, diesel, etanol, etc        
         observacoes TEXT
     )
     ''')
 
-    #Nova tabela para informações de combustível
+# Criar tabela de carros
     cursor.execute('''
-   CREATE TABLE IF NOT EXISTS tanques (
+    CREATE TABLE IF NOT EXISTS combustivel (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        carro_id INTEGER NOT NULL,
-        capacidade_tanque REAL NOT NULL,              -- em litros
-        tipo_combustivel TEXT NOT NULL,               -- gasolina, diesel, etanol, etc
-        autonomia_media REAL,                         -- km/litro
-        ultima_medicao TEXT,                          -- data da última medição
-        combustivel_atual REAL DEFAULT 0,             -- quantidade teórica atual no tanque
-        FOREIGN KEY (carro_id) REFERENCES carros(id)
+        nome TEXT NOT NULL,
+        valor REAL NOT NULL,
+        posto_referencia TEXT
     )
     ''')
+
 
     cursor.execute('''
     CREATE TABLE IF NOT EXISTS abastecimentos (
