@@ -80,7 +80,7 @@ if st.button("Salvar Valores", key='bt_add_carr'):
 
 
 with st.expander('Edição de cadastro', expanded=False):
-    col_bt01, col_bt02 = st.columns(2)
+    
 
     select_carros = pd.DataFrame(Obter_select_box_carros(), columns=['id', 'nome_completo'])
     nome_carro_edit = st.selectbox('', options=select_carros['nome_completo'])
@@ -89,16 +89,25 @@ with st.expander('Edição de cadastro', expanded=False):
 
     st.write(id_selecionado)
 
+    #-------------------------------------------------------------------------------------
+    #BOTÕES DE ATUALIZAR E REMOVER
+    col_bt01, col_bt02 = st.columns(2)
 
     with col_bt01:
-        if st.button("Atualiza Valores", key='bt_edit_carr'):
+        if st.button("Atualiza Carro Selecionado", key='bt_edit_carr'):
                 pass
 
 
     with col_bt02:
-        if st.button("Deleta Valores", key='bt_delet_carr'):
-                pass
-
+       if st.button("Remover Carro selecionado", key='bt_delet_carr'):
+        st.write(f"Tentando remover carro com ID: {id_selecionado}") 
+        sucesso, mensagem = Remover_carro(id_selecionado)
+        if sucesso:
+            st.success(mensagem)
+            st.rerun()
+        else:
+            st.error(mensagem)
+                
 
 #--------------------------------------------------------------
 st.divider()

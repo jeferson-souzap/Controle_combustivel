@@ -24,13 +24,31 @@ def Adicionar_carro(data_cadastro, marca, modelo, nome_completo, ano, placa, tot
     conn.close()
 
 
-def Remover_carro(nome):
-    conn = sqlite3.connect(LOCAL_DB)
-    cursor = conn.cursor()
-    cursor.execute("DELETE FROM categoria WHERE nome = ?", (nome))
-    conn.commit()
-    conn.close()
-
+def Remover_carro(id):
+    try:
+        id_int = int(id)  # Converte int
+        conn = sqlite3.connect(LOCAL_DB)
+        cursor = conn.cursor()
+        
+        # Verifica se o ID existe
+        cursor.execute("SELECT COUNT(*) FROM carros WHERE id = ?", (id_int,))
+        if cursor.fetchone()[0] == 0:
+            conn.close()
+            return False, "ID não encontrado no banco de dados"
+        
+        # Tenta excluir o registro
+        cursor.execute("DELETE FROM carros WHERE id = ?", (id_int,))
+        if cursor.rowcount == 0:
+            conn.rollback()
+            conn.close()
+            return False, "Nenhum registro foi afetado pela exclusão"
+        
+        conn.commit()
+        conn.close()
+        return True, "Carro removido com sucesso"
+    except Exception as e:
+        return False, f"Erro ao remover carro: {str(e)}"
+    
 def Atualizar_carro():
     pass
 
