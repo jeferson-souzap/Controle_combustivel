@@ -11,6 +11,9 @@ locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
 st.set_page_config(page_title='Cadastro', initial_sidebar_state='collapsed')
 #--------------------------------------------------------------
 
+#Precisa criar um link com o DB para mostrar os resultados cadastrados
+#Solicitar o usuário revisar o cadastro 1 mes por mes (opcional)
+
 st.markdown('### Cadastro do preço de combustivel atual ###')
 
 col_comb01,col_comb02 = st.columns(2)
@@ -40,10 +43,11 @@ st.divider()
 
 
 
+#precisa organizar melhor os controles na tela
 
 st.markdown('### Cadastro de carros ###')
 
-data_cadastro = st.date_input('Informe a data', value='today', format='DD/MM/YYYY')
+data_cadastro = st.date_input('Data Cadastro', value='today', format='DD/MM/YYYY')
 
 marca = st.text_input('Marca do Carro', placeholder='Ford')
 modelo = st.text_input('Modelo do Carro', placeholder='KA')
@@ -80,13 +84,9 @@ if st.button("Salvar Valores", key='bt_add_carr'):
 
 
 with st.expander('Edição de cadastro', expanded=False):
-    
-
     select_carros = pd.DataFrame(Obter_select_box_carros(), columns=['id', 'nome_completo'])
-    nome_carro_edit = st.selectbox('', options=select_carros['nome_completo'])
-    
+    nome_carro_edit = st.selectbox('', options=select_carros['nome_completo'])    
     id_selecionado = select_carros.loc[select_carros['nome_completo'] == nome_carro_edit, 'id'].values[0]
-
     st.write(id_selecionado)
 
     #-------------------------------------------------------------------------------------
@@ -95,6 +95,7 @@ with st.expander('Edição de cadastro', expanded=False):
 
     with col_bt01:
         if st.button("Atualiza Carro Selecionado", key='bt_edit_carr'):
+                #Ainda falta implementar a função que atualiza o registro 
                 pass
 
 
