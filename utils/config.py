@@ -75,9 +75,6 @@ def Obter_lista_carros():
 #--------------------------------------------------------------------------------------
 
 
-
-
-
 def Cadastrar_combustivel(nome, valor=0.0, posto='BR'):
     conn = sqlite3.connect(LOCAL_DB)
     cursor = conn.cursor()
