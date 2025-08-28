@@ -12,9 +12,10 @@ def criar_banco_dados():
 
     # Tabela Marcas
     cursor.execute('''
-            CREATE TABLE IF NOT EXISTS marcas (
+            CREATE TABLE IF NOT EXISTS marca_modelo (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                marca TEXT UNIQUE
+                marca TEXT,
+                modelo TEXT UNIQUE
             )
             ''')
 
@@ -30,16 +31,14 @@ def criar_banco_dados():
     cursor.execute('''
             CREATE TABLE IF NOT EXISTS carro (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                fk_marca_id INTEGER,
-                fk_combustivel_id INTEGER,
-                modelo TEXT,
-                marca_modelo TEXT,
+                fk_marca_modelo_id INTEGER,
+                fk_combustivel_id INTEGER,                
                 consumo_km_litro REAL,
                 tanque REAL,
                 ano INTEGER,
                 placa TEXT UNIQUE,
                 status BOOLEAN,
-                FOREIGN KEY (fk_marca_id) REFERENCES Marcas(id),
+                FOREIGN KEY (fk_marca_modelo_id) REFERENCES marca_modelo(id),
                 FOREIGN KEY (fk_combustivel_id) REFERENCES combustivel(id)
             )
             ''')

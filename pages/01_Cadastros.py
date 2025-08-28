@@ -4,7 +4,9 @@ import datetime
 
 # --------------------------------------------------------------
 # Importa o arquivo de configuração, se necessário
-# from utils.config import *
+from utils import *
+from utils.config_cadastro_db import *
+
 # --------------------------------------------------------------
 
 # --------------------------------------------------------------
@@ -13,42 +15,112 @@ st.set_page_config(page_title='Formulários', initial_sidebar_state='collapsed',
 # --------------------------------------------------------------
 
 st.title("Sistema de Cadastros")
-st.markdown("---")
 
-## Formulário de Cadastro de Marcas e Combustível
 with st.expander('Cadastro de Marcas e Combustível', expanded=True):
-    col1, col2 = st.columns(2)
 
-    with col1:
-        st.subheader('Cadastro de Marcas')
-        with st.form(key='form_marca'):
-            nome_marca = st.text_input('Nome da Marca', placeholder='Ford')
+    st.subheader('Cadastro de Marcas')
+    with st.form(key='form_marca'):
+        nome_marca = st.text_input('Nome da Marca', placeholder='Ford')
+        nome_modelo = st.text_input('Nome d Modelo', placeholder='KA')
 
-            # Botão de envio do formulário
-            submit_marca = st.form_submit_button(label='Salvar Marca')
+        # Botão de envio do formulário
+        submit_marca = st.form_submit_button(label='Salvar Marca')
 
-            if submit_marca:
-                if nome_marca:
-                    st.success(f'Marca "{nome_marca}" salva com sucesso!')
+        if submit_marca:
+            if nome_marca:
+                msg = Salvar_marca_modelo(nome_marca, nome_modelo)
+                st.success(f'{msg} Com sucesso')
+                st.rerun()
+            else:
+                st.error('Por favor, insira o nome da marca.')
+
+    st.divider()
+    
+    st.subheader('Cadastro de Combustível')
+    with st.form(key='form_combustivel'):
+        nome_combustivel = st.text_input('Tipo de Combustível', placeholder='Etanol')
+
+        # Botão de envio do formulário
+        submit_comb = st.form_submit_button(label='Salvar Combustível')
+
+        if submit_comb:
+            if nome_combustivel:
+                msg = Salvar_combustivel(nome_combustivel)
+                st.success(f'{msg} Com sucesso')
+                st.rerun()
+            else:
+                st.error('Por favor, insira o tipo de combustível.')
+
+
+#-------------------------------------------------------------------
+#-------------------------------------------------------------------
+## Tabelas Marcas e Combustível
+
+with st.expander('Tabelas Marcas e Combustivel', expanded=False):
+    tab01, tab02 = st.columns(2)
+    with tab01:
+        st.dataframe(Obter_tabela_marcas())
+    
+    with tab02:
+        st.dataframe(Obter_tabela_combustivel())
+
+
+    with st.form(key='form_remover'):
+
+        df_marca = Obter_tabela_marcas()
+        df_combustivel = Obter_tabela_combustivel()
+        
+        # Cria um dicionário onde a chave é a string do selectbox e o valor é o ID
+        map_marca_to_id = {
+            f"{row['Marca']} - {row['Modelo']}": row['id']
+            for index, row in df_marca.iterrows()
+        }
+        # Cria a lista de strings para exibir no selectbox
+        nomes_marcas = list(map_marca_to_id.keys())
+        
+        # 2. Mapeamento para Combustíveis
+        map_combustivel_to_id = {
+            row['Combustível']: row['id']
+            for index, row in df_combustivel.iterrows()
+        }
+        nomes_combustivel = list(map_combustivel_to_id.keys())
+        
+        col01, col02 = st.columns(2)
+        with col01:
+            # Passa a lista de nomes para o selectbox
+            nomes_marcas_selecionados = st.selectbox('Selecione as Marcas para remover:', nomes_marcas)
+            bt_remover_marca = st.form_submit_button('Remover Marca Selecionada')
+            
+            if bt_remover_marca:
+                # Pega o ID usando o nome selecionado no selectbox como chave do dicionário
+                id_para_remover = map_marca_to_id.get(nomes_marcas_selecionados)
+                if id_para_remover:
+                    Remover_marca(id_para_remover)
+                    st.success('Marca removida com sucesso!')
+                    st.rerun() 
                 else:
-                    st.error('Por favor, insira o nome da marca.')
+                    st.error("Erro: ID da marca não encontrado.")
 
-    with col2:
-        st.subheader('Cadastro de Combustível')
-        with st.form(key='form_combustivel'):
-            nome_combustivel = st.text_input('Tipo de Combustível', placeholder='Etanol')
-
-            # Botão de envio do formulário
-            submit_comb = st.form_submit_button(label='Salvar Combustível')
-
-            if submit_comb:
-                if nome_combustivel:
-                    st.success(f'Combustível "{nome_combustivel}" salvo com sucesso!')
+        with col02:
+            # Passa a lista de nomes para o selectbox
+            nomes_combustivel_selecionados = st.selectbox('Selecione os Combustíveis para remover:', nomes_combustivel)
+            bt_remover_combustivel = st.form_submit_button('Remover Combustível Selecionado')
+            
+            if bt_remover_combustivel:
+                # Pega o ID usando o nome selecionado no selectbox como chave do dicionário
+                id_para_remover = map_combustivel_to_id.get(nomes_combustivel_selecionados)
+                if id_para_remover:
+                    Remover_combustivel(id_para_remover)
+                    st.success('Combustível removido com sucesso!')
+                    st.rerun()
                 else:
-                    st.error('Por favor, insira o tipo de combustível.')
+                    st.error("Erro: ID do combustível não encontrado.")
+                
+        
 
-# Divisor visual para separar as seções
-st.markdown("---")
+
+#-------------------------------------------------------------------
+#-------------------------------------------------------------------
 
 ## Formulário de Cadastro de Motorista
 with st.expander('Cadastro de Motorista', expanded=True):
@@ -82,6 +154,16 @@ with st.expander('Cadastro de Motorista', expanded=True):
 
         if salvar_motorista:
             st.success('Motorista salvo com sucesso!')
+
+
+
+with st.expander('Tabela Cadastro Motorista', expanded=False):
+    tab01, tab02 = st.columns(2)
+    pass
+
+
+
+#-------------------------------------------------------------------
 
 with st.expander('Cadastro de Carros', expanded=True):
     with st.form(key='form_carros'):
@@ -124,3 +206,11 @@ with st.expander('Cadastro de Carros', expanded=True):
             st.success("Cadastro do carro realizado com sucesso!")
 
 
+
+with st.expander('Tabela Cadastro Carros', expanded=False):
+    tab01, tab02 = st.columns(2)
+    pass
+
+
+
+#-------------------------------------------------------------------
