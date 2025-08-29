@@ -1,70 +1,57 @@
 # FuelTrack - Aplicativo de Controle de Combustível
 
-### Resumo
+## Resumo
 
-O aplicativo nasceu com a necessidade de poder controlar o consumo de combustivel baseado nas configurações do carro.
-Vale lembrar que é um calculo aproximado, que pode ajudar muito na programação de viagens longas.
+Um aplicativo de gerenciamento de combustível para calcular autonomia, monitorar o consumo e planejar viagens de carro, nascido da necessidade de nunca mais quebrar a bomba de gasolina.
 
 ## Descrição
 
-FuelTrack é uma aplicação web desenvolvida em Python com Streamlit que permite aos usuários gerenciar e monitorar o consumo de combustível de seus veículos.
-O aplicativo oferece recursos como cadastro de veículos, acompanhamento de abastecimentos, previsões de autonomia e planejamento de viagens.
-Funcionalidades
+O FuelTrack é uma aplicação web desenvolvida em Python e Streamlit que resolve um problema prático e comum: o controle de combustível. Criado a partir de uma experiência pessoal de falha da bomba de gasolina, o projeto tem como objetivo principal ajudar motoristas a monitorarem o consumo de seus veículos, prever a autonomia do tanque e planejar viagens com mais segurança.
 
-**Cadastro de Veículos:**
-Registre seus carros com especificações detalhadas (marca, modelo, ano, tipo de combustível, capacidade do tanque, consumo médio)
 
-**Registro de Abastecimentos:** Acompanhe cada abastecimento realizado
+## Visão Geral
 
-**Monitoramento de Consumo:** Visualize estatísticas de consumo por veículo
+O FuelTrack é uma aplicação web desenvolvida em Python e Streamlit que resolve um problema prático e comum: o controle de combustível. Criado a partir de uma experiência pessoal de falha da bomba de gasolina, o projeto tem como objetivo principal ajudar motoristas a monitorarem o consumo de seus veículos, prever a autonomia do tanque e planejar viagens com mais segurança.
 
-**Previsão de Autonomia:** Calcule quanto tempo e quilômetros seu combustível atual vai durar
+### Recursos
 
-**Planejador de Viagens:** Faça projeções de consumo para viagens planejadas
+- Registro de Dados: Cadastre veículos com especificações detalhadas (marca, modelo, tipo de combustível, etc.) e registre cada abastecimento para manter um histórico preciso.
 
-## Tecnologias Utilizadas
+- Monitoramento e Análise: Visualize o consumo de combustível por veículo, acompanhando médias e tendências para identificar o uso mais eficiente.
 
-Python: Linguagem de programação principal
-Streamlit: Framework para desenvolvimento da interface web
-Pandas: Manipulação e análise de dados
-Matplotlib/Plotly: Visualização de dados e gráficos
+- Cálculo de Autonomia: Preveja a autonomia restante do seu tanque, sabendo quantos quilômetros você ainda pode percorrer com o combustível atual.
+
+- Planejador de Viagens: Faça projeções de consumo para viagens longas, ajudando a planejar paradas e estimar custos.
+
+### Tecnologias
+
+O FuelTrack foi desenvolvido usando as seguintes tecnologias:
+
+- Python: A linguagem principal por trás da lógica da aplicação.
+-Streamlit: O framework que transformou o código Python em uma interface web interativa.
+- Pandas: Usado para manipulação, processamento e análise dos dados de consumo.
+- SQLite3: O banco de dados para armazenar todas as informações localmente.
+- Matplotlib/Plotly: Bibliotecas de visualização para gerar gráficos e painéis interativos.
 
 ### Instalação
 
 ```bash
-# Clone o repositório
 git clone https://github.com/seu-usuario/fueltrack.git
 cd fueltrack
+```
 
-### Crie um ambiente virtual (recomendado)
+### Crie e ative um ambiente virtual (recomendado)
+
+```bash
 python -m venv venv
-source venv/bin/activate  # No Windows: venv\Scripts\activate
+# No Windows:
+venv\Scripts\activate
+# No macOS/Linux:
+source venv/bin/activate
 ```
 
 ### Instale as dependências
 
 ```bash
 pip install -r requirements.txt
-Como Executar
-bashstreamlit run app.py
-```
-
-### Estrutura do Projeto
-
-```bash
-fueltrack/
-├── app.py                  # Ponto de entrada principal
-├── pages/                  # Páginas do aplicativo
-│   ├── cadastro_veiculos.py
-│   ├── abastecimentos.py
-│   ├── estatisticas.py
-│   └── planejador_viagens.py
-├── utils/                  # Funções utilitárias
-│   ├── calculo_consumo.py
-│   └── data_manager.py
-├── data/                   # Armazenamento de dados
-│   ├── veiculos.csv
-│   └── abastecimentos.csv
-├── assets/                 # Recursos estáticos
-└── requirements.txt        # Dependências do projeto
 ```
