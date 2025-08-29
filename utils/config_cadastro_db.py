@@ -27,7 +27,6 @@ def Salvar_marca_modelo(marca, modelo):
         # Captura qualquer outro erro do SQLite.
         return f"Erro ao salvar a marca: {e}"
 
-
 def Remover_marca(id_marca):
     try:
         with sqlite3.connect(LOCAL_DB) as conn:
@@ -37,8 +36,6 @@ def Remover_marca(id_marca):
             return f"Marca removida com sucesso!"
     except sqlite3.Error as e:
         return f"Erro ao remover marca: {e}"
-    
-    
 
 def Obter_tabela_marcas():
     conn = sqlite3.connect(LOCAL_DB)
@@ -53,6 +50,13 @@ def Obter_tabela_marcas():
     conn.close()
     return marcas.rename(columns=novos_nomes)
 
+def Obter_lista_marcas():
+    conn = sqlite3.connect(LOCAL_DB)
+    cursor = conn.cursor()
+    cursor.execute("SELECT marca, modelo FROM marca_modelo")
+    categorias = cursor.fetchall()
+    conn.close()
+    return [f"{categoria[0]} - {categoria[1]}" for categoria in categorias]
 
 # --------------------------------------------------------------------------------------
 # CADASTRO DE COMBUSTIVEL
@@ -81,18 +85,7 @@ def Remover_combustivel(id_combustivel):
             return f"Combustível removido com sucesso!"
     except sqlite3.Error as e:
         return f"Erro ao remover combustível: {e}"
-           
-
-
-def Obter_combustivel():
-    conn = sqlite3.connect(LOCAL_DB)
-    cursor = conn.cursor()
-    cursor.execute("SELECT nome_combustivel FROM combustivel")
-    categorias = cursor.fetchall()
-    conn.close()
-    return [categoria[0] for categoria in categorias]
-
-
+     
 def Obter_tabela_combustivel():
     conn = sqlite3.connect(LOCAL_DB)    
     query = "SELECT * FROM combustivel"
@@ -102,55 +95,34 @@ def Obter_tabela_combustivel():
 
     return combustivel.rename(columns={'nome_combustivel': 'Combustível'})
 
-
-# --------------------------------------------------------------------------------------
-
-def Adicionar_carro(data_cadastro, marca, modelo, nome_completo, ano, placa, total_tanque, consumo_litros, autonomia,
-                    tipo_combustivel, observacoes):
+def Obter_lista_combustivel():
     conn = sqlite3.connect(LOCAL_DB)
     cursor = conn.cursor()
-
-    cursor.execute(
-        "INSERT INTO carros (data_cadastro, marca, modelo, nome_completo, ano, placa, total_tanque, consumo_litros, autonomia, tipo_combustivel, observacoes)"
-        "VALUES(?,?,?,?,?,?,?,?,?,?,?)",
-        (data_cadastro, marca, modelo, nome_completo, ano, placa, total_tanque, consumo_litros, autonomia,
-         tipo_combustivel, observacoes)
-    )
-    conn.commit()
+    cursor.execute("SELECT nome_combustivel FROM combustivel")
+    categorias = cursor.fetchall()
     conn.close()
+    return [categoria[0] for categoria in categorias]
+
+# --------------------------------------------------------------------------------------
+# CADASTRO DE VEICULOS
 
 
-def Remover_carro(id):
-    try:
-        id_int = int(id)  # Converte int
-        conn = sqlite3.connect(LOCAL_DB)
-        cursor = conn.cursor()
+def Salvar_veiculo():
 
-        # Verifica se o ID existe
-        cursor.execute("SELECT COUNT(*) FROM carros WHERE id = ?", (id_int,))
-        if cursor.fetchone()[0] == 0:
-            conn.close()
-            return False, "ID não encontrado no banco de dados"
+    pass
 
-        # Tenta excluir o registro
-        cursor.execute("DELETE FROM carros WHERE id = ?", (id_int,))
-        if cursor.rowcount == 0:
-            conn.rollback()
-            conn.close()
-            return False, "Nenhum registro foi afetado pela exclusão"
+def Atualizar_veiculo():
+    pass
 
-        conn.commit()
-        conn.close()
-        return True, "Carro removido com sucesso"
-    except Exception as e:
-        return False, f"Erro ao remover carro: {str(e)}"
-
-
-def Atualizar_carro():
+def Remover_veiculo():
     pass
 
 
-def Obter_select_box_carros():
+def obter_tabela_veiculos():
+    pass
+
+
+def Obter_lista_veciulos():
     conn = sqlite3.connect(LOCAL_DB)
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM carros")
@@ -169,26 +141,55 @@ def Obter_lista_carros():
 
 
 # --------------------------------------------------------------------------------------
+# CADASTRO DE MOTORISTAS
 
+def Salvar_motorista(nome, cpf, telefone, email, data_nascimento, habilitacao_categoria, dt_validade_cnh, status):
+    try:
+        with sqlite3.connect(LOCAL_DB) as conn:
+            cursor = conn.cursor()
 
-def Cadastrar_combustivel(nome, valor=0.0, posto='BR'):
-    conn = sqlite3.connect(LOCAL_DB)
-    cursor = conn.cursor()
-    cursor.execute(
-        "INSERT INTO combustivel (nome, valor, posto_referencia) "
-        "VALUES (?, ?, ?)",
-        (nome, valor, posto)
-    )
+            cursor.execute("""
+                INSERT INTO motorista 
+                (nome, cpf, telefone, email, data_nascimento, habilitacao_categoria, dt_validade_cnh, status) 
+                VALUES(?,?,?,?,?,?,?,?)""", 
+                (nome, cpf, telefone, email, data_nascimento, habilitacao_categoria, dt_validade_cnh, status)
+            )
 
-    conn.commit()
+            return f"Motorista '{nome}' salvo com sucesso!"
+
+    except sqlite3.IntegrityError as e:
+        return f"Erro: O CPF '{cpf}' já existe no banco de dados."
+
+    except sqlite3.Error as e:
+        return f"Erro ao salvar o motorista: {e}"
+    
+def Remover_motorista(id_motorista):
+    try:
+        with sqlite3.connect(LOCAL_DB) as conn:
+            cursor = conn.cursor()
+            cursor.execute("DELETE FROM motorista WHERE id = ?", (id_motorista,))
+            conn.commit()
+            return f"Motorista removido com sucesso!"
+    except sqlite3.Error as e:
+        return f"Erro ao remover motorista: {e}"
+
+def Obter_tabela_motorista():
+    conn = sqlite3.connect(LOCAL_DB)    
+    query = "SELECT * FROM motorista"
+
+    motorista = pd.read_sql(query, conn)
     conn.close()
 
+    novos_nomes = {
+        'id': 'id',
+        'nome': 'Nome',
+        'cpf': 'CPF',
+        'telefone': 'Telefone',
+        'email': 'Email',
+        'data_nascimento': 'Data de Nascimento',
+        'habilitacao_categoria': 'Categoria CNH',
+        'dt_validade_cnh': 'Validade CNH',
+        'status': 'Status'
+    }
 
-def Obter_combustivel():
-    conn = sqlite3.connect(LOCAL_DB)
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM combustivel")
-    categorias = cursor.fetchall()
-    conn.close()
-    return [categoria[1:2] for categoria in categorias]
-
+    return motorista.rename(columns=novos_nomes)

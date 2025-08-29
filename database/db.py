@@ -29,7 +29,7 @@ def criar_banco_dados():
 
     # Tabela carro
     cursor.execute('''
-            CREATE TABLE IF NOT EXISTS carro (
+            CREATE TABLE IF NOT EXISTS veiculo (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 fk_marca_modelo_id INTEGER,
                 fk_combustivel_id INTEGER,                
